@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: Snippets API
+  description: An API for retrieving snippets of Wikipedia articles
+  version: 1.0.0
+servers:
+  - url: http://localhost:9095
+paths:
+  /snippets/{name}:
+    get:
+      summary: Get Snippet
+      description: Retrieves a snippet of a Wikipedia article based on the given name
+      operationId: getSnippet
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: The name of the Wikipedia article to retrieve a snippet for
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSnippetResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    GetSnippetResponse:
+      type: object
+      properties:
+        short_description:
+          type: string
+          nullable: true
+          description: The short description of the Wikipedia article
+        error_message:
+          type: string
+          nullable: true
+          description: An error message if the request failed
+    Error:
+      type: object
+      properties:
+        error_message:
+          type: string
+          description: An error message
